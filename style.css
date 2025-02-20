@@ -1,0 +1,93 @@
+.head-line{
+    margin-top:1em;
+    display: flex;
+    justify-content: center;
+}
+.head-line svg {
+    width:430px;
+}
+
+.menus{
+    margin-top:1em;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top:1px solid #ebebeb;
+    border-bottom:4px double #000;
+}
+
+.menus button {
+    border:none;
+    background: none;
+    margin: 5px;
+}
+
+.menus button:hover{
+    background-color: beige;
+}
+
+.news-img-size{
+    max-width: 100%;
+    max-height: 250px;
+}
+
+.news{
+    border-bottom: 2px solid black;
+    padding:10px
+}
+
+
+/* 모바일 메뉴 */
+.sidenav, .nav-open {
+    display:none;
+}
+
+
+@media screen and (max-width: 600px) {
+    .menus{
+        display: none;
+    }
+    .sidenav, .nav-open {
+        display:block;
+    }
+    
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #ebebeb;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+      }
+      
+      .sidenav button {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        display: block;
+        transition: 0.3s;
+        border:none;
+        background: none;
+        margin: 5px;
+      }
+      
+      .sidenav button:hover {
+        color: white;
+      }
+      
+      .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        color:black;
+      }
+
+      .sidenav {padding-top: 15px;}
+      .sidenav button {font-size: 18px;}
+}
