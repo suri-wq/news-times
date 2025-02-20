@@ -7,6 +7,22 @@
     width:430px;
 }
 
+.search{
+    display:flex;
+    margin-top:1em;
+    height:30px;
+    align-items: baseline;
+}
+
+.search span{margin-right:5px;}
+
+
+#searchInput, #searchBtn {
+    display:none;
+}
+
+
+
 .menus{
     margin-top:1em;
     display: flex;
