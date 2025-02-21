@@ -1,20 +1,43 @@
 // news 
 // let newsArea = document.getElementById("news-area");
 
+let category = ''
+let categoryBtn = document.querySelectorAll(".menus button")
+
+categoryBtn.forEach(function(category){
+    category.addEventListener("click",function(event){
+        filterNews(event);
+    })
+})
+
+const filterNews=(e)=>{
+    if (e) {
+        let selectedCategory = e.target.textContent.trim().toLowerCase();
+        category = selectedCategory;
+        console.log("선택한 카테고리", category)
+        getLatestNews()
+    }
+}
+
 // API
 const API_KEY = `a06fc92583d340f7b2cf962b0eede9ec`
 let newsList = []
+let keyword = 'etf'
 const getLatestNews =async ()=>{
-    const url = new URL(`https://newsapi.org/v2/top-headlines?q=etf&apiKey=${API_KEY}`);
+    const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
+    if (category) {
+        url.searchParams.append("category", category);
+    }
     const response = await fetch(url);
     const data = await response.json();
     newsList = data.articles;
     console.log("rrr", newsList);
+    console.log("url",url)
+    console.log("category",category)
     render();
 }
 
 getLatestNews();
-
 
 const render=()=>{
     const newsHTML = newsList.map(
