@@ -19,12 +19,19 @@ const filterNews=(e)=>{
     }
 }
 
+// url = new URL(
+//     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=${PAGE_SIZE}`
+//   );
+
+
+
 // API
 const API_KEY = `a06fc92583d340f7b2cf962b0eede9ec`
 let newsList = []
 let keyword = 'etf'
 const getLatestNews =async ()=>{
-    const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
+    // const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
+    const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=10`)
     if (category) {
         url.searchParams.append("category", category);
     }
