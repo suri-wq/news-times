@@ -50,7 +50,7 @@ const render=()=>{
     const newsHTML = newsList.map(
         (news) => `<div class="row news">
                 <div class="col-lg-4">
-                    <img class="news-img-size" src="${news.urlToImage || "https://www.google.com/imgres?q=image%20not%20available&imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100066391555131&imgrefurl=https%3A%2F%2Fwww.facebook.com%2Fphoto.php%3Ffbid%3D5427040920646696%26id%3D855398481144319%26set%3Da.855403197810514&docid=pgXAZeZ_tbk0pM&tbnid=F8QfTsu4hF5GbM&vet=12ahUKEwjf_dPm7tSLAxVQdfUHHTmJI0EQM3oFCIYBEAA..i&w=909&h=909&hcb=2&ved=2ahUKEwjf_dPm7tSLAxVQdfUHHTmJI0EQM3oFCIYBEAA"}" alt="">
+                    <img class="news-img-size" src="${news.urlToImage || "https://img.freepik.com/premium-vector/modern-design-concept-no-image-found-design_637684-247.jpg?ga=GA1.1.1824244769.1739458494&semt=ais_hybrid"}" alt="">
                 </div>
                 <div class="col-lg-8">
                     <h2>${news.title}</h2>
