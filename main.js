@@ -85,7 +85,8 @@ getLatestNews();
 const getNewsByCategory=async (event)=>{
     const category = event.target.textContent.toLowerCase();
     console.log("category");
-    const url = new URL(`https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${API_KEY}`);
+    // const url = new URL(`https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${API_KEY}`);
+    const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}&country=kr&pageSize=10`)
 
     const response = await fetch(url)
     const data = await response.json()
