@@ -1,50 +1,99 @@
-// news 
-// let newsArea = document.getElementById("news-area");
 
-let category = ''
-let categoryBtn = document.querySelectorAll(".menus button")
 
-categoryBtn.forEach(function(category){
-    category.addEventListener("click",function(event){
-        filterNews(event);
-    })
-})
-
-const filterNews=(e)=>{
-    if (e) {
-        let selectedCategory = e.target.textContent.trim().toLowerCase();
-        category = selectedCategory;
-        console.log("선택한 카테고리", category)
-        getLatestNews()
+// Search area
+function showSearch() {
+    let searchInput = document.getElementById("searchInput");
+    let searchBtn = document.getElementById("searchBtn");
+    if (searchInput.style.display === "none" || searchInput.style.display === "") {
+        searchInput.style.display = "block";
+        searchBtn.style.display = "block";
+    } else {
+        searchInput.style.display = "none";
+        searchBtn.style.display = "none";
     }
 }
 
-// url = new URL(
-//     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=${PAGE_SIZE}`
-//   );
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.body.style.backgroundColor = "white";
+}
+
+
 
 
 
 // API
 const API_KEY = `a06fc92583d340f7b2cf962b0eede9ec`
 let newsList = []
-let keyword = 'etf'
-const getLatestNews =async ()=>{
-    // const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
-    const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=10`)
-    if (category) {
-        url.searchParams.append("category", category);
+const menus = document.querySelectorAll(".menus button")
+menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
+
+const searchInput = document.getElementById("searchInput")
+const searchBtn = document.getElementById("searchBtn")
+
+const searchKeyword =async()=>{
+    const keyword = searchInput.value.trim();
+    if (searchInput === "") return;
+    const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log(url)
+    console.log("articles",data.articles)
+    // newsList = Array.isArray(data.articles)? data.articles : [];
+    newsList = data.articles;
+    console.log("newslist",newsList)
+    render();
+}
+
+
+searchInput.addEventListener("input",function(){
+    searchBtn.disabled = searchInput.value.trim() === "";
+})
+
+searchInput.addEventListener("keypress",function(event){
+    if (event.key === "Enter"&& searchInput.value.trim() !==""){
+        searchKeyword();
     }
+})
+
+searchBtn.addEventListener("click",searchKeyword)
+searchBtn.disabled = true;
+
+
+
+const getLatestNews =async ()=>{
+    // newsapi url
+    const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
+    // 과제 제출용 url
+    // const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=10`)
+
     const response = await fetch(url);
     const data = await response.json();
     newsList = data.articles;
     console.log("rrr", newsList);
     console.log("url",url)
-    console.log("category",category)
+    render();
+}
+getLatestNews();
+
+const getNewsByCategory=async (event)=>{
+    const category = event.target.textContent.toLowerCase();
+    console.log("category");
+    const url = new URL(`https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${API_KEY}`);
+
+    const response = await fetch(url)
+    const data = await response.json()
+    console.log("ddd",data)
+    newsList = data.articles;
     render();
 }
 
-getLatestNews();
 
 const render=()=>{
     const newsHTML = newsList.map(
@@ -59,7 +108,7 @@ const render=()=>{
                        
                     </p>
                     <div>
-                        ${news.source.publisher || "no source"} * ${moment(news.publishedAt).fromNow()}
+                        ${news.source.name || "no source"} * ${moment(news.publishedAt).fromNow()}
                     </div>
                 </div>
             </div>`
