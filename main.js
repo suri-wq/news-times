@@ -69,9 +69,9 @@ searchBtn.disabled = true;
 
 const getLatestNews =async ()=>{
     // newsapi url
-    const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
+    // const url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
     // 과제 제출용 url
-    // const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=10`)
+    const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&pageSize=10`)
 
     const response = await fetch(url);
     const data = await response.json();
