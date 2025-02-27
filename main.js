@@ -40,7 +40,8 @@ const searchBtn = document.getElementById("searchBtn")
 const searchKeyword =async()=>{
     const keyword = searchInput.value.trim();
     if (searchInput === "") return;
-    const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
+    const url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}&country=kr&pageSize=10`)
+    // const url = new URL(`https://newsapi.org/v2/top-headlines?q=${keyword}&apiKey=${API_KEY}`);
     const response = await fetch(url);
     const data = await response.json();
     console.log(url)
