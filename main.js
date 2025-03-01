@@ -6,6 +6,13 @@ let url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`
   );
 
+// Pagination variables
+let totalResults= 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
+
+
 // Selectors
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
@@ -15,26 +22,37 @@ const menus = document.querySelectorAll(".menu button")
 searchInput.addEventListener("input", ()=> searchBtn.disabled = searchInput.value.trim()==="");
 searchInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter" && searchInput.value.trim()) {
-        event.preventDefault();  // ✅ Prevent default action (form submission)
+        event.preventDefault(); 
         getNewsByKeyword();
     }
 });
+const keyword = searchInput.value.trim();
 
 
 // Fetch news function
-const getNews = async()=>{
+const getNews = async(keyword)=>{
     try {
+        url.searchParams.set("page",page); 
+        url.searchParams.set("pageSize",pageSize);
+        
         const response = await fetch(url);
         const data = await response.json();
+        
         if(response.status === 200){
             // no result
             if (data.articles.length===0){
-                throw new Error ("No result for this search")
+                throw new Error (`검색하신 [${keyword}]에 해당하는 기사가 없습니다.`)
             }
             newsList = data.articles;
+            totalResults = data.totalResults;
             render();
+            if (totalResults>=1){
+                paginationRender();
+            }
+            // paginationRender();
             console.log(url)
         } else {
+
             throw new Error (data.message)
         }
 
@@ -45,6 +63,7 @@ const getNews = async()=>{
 
 // search all
 const getLatestNews = async()=>{
+    page = 1;
     // url = new URL(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
     url = new URL(
         `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`
@@ -54,6 +73,7 @@ const getLatestNews = async()=>{
 
 // search by category
 const getNewsByCategory = async(event)=>{
+    page = 1;
     event.preventDefault();
     const category = event.target.textContent.toLowerCase();
     // url = new URL (`https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`);
@@ -68,13 +88,21 @@ document.querySelectorAll(".menus button").forEach(menu => menu.addEventListener
 
 // search by keyword
 const getNewsByKeyword = async()=>{
+    const paginationElement = document.querySelector(".pagination");
+    const pageInfoElement = document.querySelector(".page-info"); 
+    // page = 1;
     const keyword = searchInput.value.trim();
     // url = new URL(`https://newsapi.org/v2/top-headlines?country=us&q=${keyword}&apiKey=${API_KEY}`);
+    paginationElement.style.display = "none"; 
+    paginationElement.innerHTML = ""; 
+    pageInfoElement.style.display = "none";
+    pageInfoElement.innerHTML = "";
     if (!keyword) return;
     url = new URL(
         `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}`
       );
-    await getNews();
+    await getNews(keyword);
+    searchInput.value = "";
 }
 searchBtn.addEventListener("click", getNewsByKeyword);
 
@@ -106,6 +134,77 @@ const errorRender = (errorMessage)=>{
   ${errorMessage}
 </div>`;
     document.getElementById("news-rows").innerHTML = errorHTML   
+}
+
+const paginationRender=()=>{
+    const paginationElement = document.querySelector(".pagination");
+    const pageInfoElement = document.querySelector(".page-info"); 
+
+    let paginationHTML = "";
+    let pageInfoHTML = "";
+    const totalPages = Math.ceil(totalResults / pageSize);
+    
+    paginationElement.style.display = "none";
+    paginationElement.innerHTML = "";
+    paginationElement.style.display = "flex";
+    pageInfoElement.style.display = "none";
+    pageInfoElement.innerHTML = "";
+    pageInfoElement.style.display = "block";
+
+
+    if (totalResults === 0 || totalPages < 1) return;
+
+    const startArticle = (page - 1) * pageSize + 1;
+    const endArticle = Math.min(page * pageSize, totalResults);
+
+    pageInfoHTML = `<strong>${page}</strong> 페이지 &nbsp;| &nbsp;<strong> ${totalResults}</strong>개의 기사 중 &nbsp; <strong>${startArticle} - ${endArticle}</strong> `;
+
+    const pageGroup = Math.ceil(page/groupSize);
+    let lastPage = pageGroup * groupSize;
+    if (lastPage > totalPages) {
+      lastPage = totalPages;
+    }
+  
+    let firstPage =
+      lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
+  
+    // const firstPage = lastPage - (groupSize-1)<=0? 1: lastPage - (groupSize -1);
+
+    paginationHTML = `<li class="page-item" onclick="moveToPage(1)"  style="${page<=1?"display:none":''}"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+    </a></li>
+    <li class="page-item" onclick="moveToPage(${page-1})" style="${page<=1?"display:none":''}"><a class="page-link" href="#" aria-label="Previous">
+        &lt;
+    </a></li>
+    `;
+
+    for(let i=firstPage;i<=lastPage;i++){
+        paginationHTML += `<li class="page-item ${i===page?"active":''}" onclick="moveToPage(${i})"><a class="page-link" href="#">${i}</a></li>`
+    }
+
+    paginationHTML += ` 
+    <li class="page-item" onclick="moveToPage(${page+1})" style="${page===totalPages?"display:none":''}">
+    <a class="page-link" href="#" aria-label="Next">
+        &gt;
+    </a>
+    </li>
+    <li class="page-item" onclick="moveToPage(${totalPages})" style="${page===totalPages?"display:none":''}">
+    <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+    </a>
+    </li>`
+    
+    
+    
+    paginationElement.innerHTML=paginationHTML
+    pageInfoElement.innerHTML = pageInfoHTML
+
+    
+}
+
+const moveToPage=(pageNum)=>{
+    console.log("clicked",pageNum);
+    page = pageNum;
+    getNews();
 }
 
 

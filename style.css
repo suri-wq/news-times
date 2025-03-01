@@ -58,6 +58,37 @@
 }
 
 
+/* pagination */
+.pagination{
+    display:none;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: pink;
+    border-color: pink;
+    color: white;
+}
+
+.pagination .page-link {
+    background-color: #f8f9fa;
+    color: black;
+    border: 1px solid #ddd;
+}
+
+.pagination .page-link:hover {
+    background-color: #ddd;
+    color: hotpink;
+}
+.page-info{
+    display:none;
+}
+
+.page-info {
+    margin-bottom: 10px;
+    display: none;
+    text-align: right;
+}
+
 @media screen and (max-width: 600px) {
     .menus{
         display: none;
